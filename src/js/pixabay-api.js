@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export function fetchImages(query) {
+export function fetchImages(query, page = 1) {
   return axios
     .get('https://pixabay.com/api/', {
       params: {
@@ -9,6 +9,8 @@ export function fetchImages(query) {
         image_type: 'photo',
         orientation: 'horizontal',
         safesearch: true,
+        page,
+        per_page: 15,
       },
     })
     .then(response => response.data)
