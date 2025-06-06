@@ -17,49 +17,48 @@ const lightBoxInstance = new SimpleLightbox('.gallery a', {
   captionDelay: 250,
 });
 
-const onFormSubmit = e => {
-    e.preventDefault();
-    const form = e.currentTarget;
-    const query = input.value.trim();
-    input.value = '';
+const onFormSubmit = async e => {
+    try {
+        e.preventDefault();
+        const form = e.currentTarget;
+        const query = input.value.trim();
+        input.value = '';
 
-    if (query === '') {
-        iziToast.warning({
-          title: 'Caution',
-          message: 'Please enter a query!',
-          position: 'topRight',
-        });
-    
-        return;
-    }
-    
-    loader.classList.remove('hidden');
+        if (query === '') {
+            iziToast.warning({
+            title: 'Caution',
+            message: 'Please enter a query!',
+            position: 'topRight',
+            });
+        
+            return;
+        }
+        
+        loader.classList.remove('hidden');
 
-    gallery.innerHTML = '';
+        gallery.innerHTML = '';
 
-    fetchImages(query)
-        .then(data => {
-            loader.classList.add('hidden');
-            if (data.total === 0) {
-                gallery.innerHTML = '';
+        const data = await fetchImages(query);
 
-                return iziToast.show({
-                    message:
-                        'Sorry, there are no images matching your search query. Please try again!',
-                    color: 'red',
-                    position: 'topRight',
-                });
-            }
+        loader.classList.add('hidden');
+        if (!data.hits.length) {
+            gallery.innerHTML = '';
 
-            gallery.innerHTML = renderGalleryItem(data.hits);
-            lightBoxInstance.refresh();
-        })
-        .catch(err => {
-            console.log(err);
-        })
-        .finally(() => {
+            return iziToast.show({
+                message:
+                    'Sorry, there are no images matching your search query. Please try again!',
+                color: 'red',
+                position: 'topRight',
+            });
+        }
+
+        gallery.innerHTML = renderGalleryItem(data.hits);
+        lightBoxInstance.refresh();
+    } catch (error) {
+        console.log(error);
+    } finally {
             form.reset();
-        });
+        }
 }
 
 form.addEventListener("submit", onFormSubmit);
