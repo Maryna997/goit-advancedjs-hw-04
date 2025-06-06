@@ -106,6 +106,7 @@ const onLoadMoreBtnClick = async ev => {
             });
             
             loadMoreBtn.classList.add('hidden');
+            loadMoreBtn.removeEventListener('click', onLoadMoreBtnClick);
         }
     } catch (error) {
         console.log(error);
