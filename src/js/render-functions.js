@@ -36,7 +36,7 @@ export function renderGalleryItem(items) {
                     <p>${comments}</p>
                 </li>
                 <li>
-                    <p metadata-heading>Downloads</p>
+                    <p class='metadata-heading'>Downloads</p>
                     <p>${downloads}</p>
                 </li>
             </ul>
